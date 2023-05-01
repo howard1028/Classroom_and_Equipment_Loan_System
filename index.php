@@ -1,5 +1,5 @@
 <?php
-// php用來判斷動作
+// php用來判斷動作，類似function
 
 $host = 'localhost'; // 要連接的 MySQL 資料庫所在的主機
 $user = $_POST["user"]; // 登入phpadmin帳號
