@@ -1,10 +1,10 @@
 <?php
-// php用來判斷動作，類似function
+// 處理登入(index.html)
 
 $host = 'localhost'; // 要連接的 MySQL 資料庫所在的主機
-$user = $_POST["user"]; // 登入phpadmin帳號
+$user = $_POST["username"]; // 登入phpadmin帳號
 $passwd = $_POST["password"];// 登入phpadmin密碼
-$database = 'test'; // 要連接的 MySQL 資料庫名稱
+$database = 'mydb'; // 要連接的 MySQL 資料庫名稱
 
 $connect = new mysqli($host , $user , $passwd , $database); // 使用 mysqli 類別建立一個到 MySQL 資料庫的連線，並將該連線物件儲存在 $connect 變數中
 
@@ -16,3 +16,4 @@ else{
 }
 
 ?>
+
