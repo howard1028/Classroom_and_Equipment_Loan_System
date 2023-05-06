@@ -1,5 +1,4 @@
 <?php
-//test
 // 處理登入(index.html)
 
 $host = 'localhost'; // 要連接的 MySQL 資料庫所在的主機
