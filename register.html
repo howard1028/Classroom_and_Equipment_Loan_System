@@ -2,8 +2,47 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <title>註冊頁面</title>
+
+        <!--檢查密碼是否符合要求（即長度不少於6個字符，且密碼和確認密碼一致），如果檢查結果為 false，則會顯示一個警告對話框，阻止表單提交-->
+        <!-- <script>
+        
+            function validateForm() {
+                var x = document.forms["RegisterForm"]["password"].value;
+                var y = document.forms["RegisterForm"]["password_check"].value;
+                if(x.length<1){
+                    alert("密碼長度不足");
+                    return false;
+                }
+                if (x != y) {
+                    alert("請確認密碼是否輸入正確");
+                    return false;
+                }
+            }
+        </script> -->
+       
     </head>
     <body>
-        註冊頁面
+        <h1>註冊頁面</h1>
+        <!-- 若要檢查密碼則加上  onsubmit="return validateForm()" -->
+        <form name="RegisterForm" action="register.php" method="POST">
+            帳號(學號):<br>
+            <input type="text" name="UID"><br>
+            姓名:<br>
+            <input type="text" name="name"><br>
+            實驗室編號:<br>
+            <input type="text" name="lab_id"><br>
+            電子郵件:<br>
+            <input type="text" name="email"><br>
+            連絡電話:<br>
+            <input type="text" name="phone"><br>      
+            密碼(至少兩個字):<br>
+            <input type="password" name="password" id="password"><br>   
+            <!-- 確認密碼:<br>
+            <input type="password" name="password_check" id="password_check"><br>    -->
+
+            <input type="submit" value="送出"/>   
+        </form>
     </body>
 </html>
+

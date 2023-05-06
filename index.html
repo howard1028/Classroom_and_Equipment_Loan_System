@@ -2,22 +2,21 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <title>登入頁面</title>
     </head>
     <body>
         <h1>教室與設備借用系統</h1>
-        <form action="index.php" method="POST">
-            請輸入user:
-            <br>
-            <input type="text" name="user">
-            <br>
-            請輸入password:
-            <br>
-            <input type="password" name="password">
-            <br>
-            <input type="submit" value="登入"/>
-            <br>
+        <form action="login.php" method="POST">
+            請輸入帳號(學號):<br>
+            <input type="text" name="UID"><br>
+            請輸入密碼:<br>
+            <input type="password" name="password"><br>
+
+            <input type="submit" value="登入" name="submit"/><br>
+
+            <a href="register.html">註冊</a><br>
         </form>
-        <a href="register.html">註冊</a>
-        <br>
     </body>
 </html>
+
+
