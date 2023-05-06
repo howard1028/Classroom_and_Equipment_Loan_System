@@ -8,7 +8,7 @@ if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
 	header("location: welcome.php");
     exit;  //跳一次停
 }
-else{
+else{ 
     header("location: index.html");
     exit;  //跳一次停
 }
