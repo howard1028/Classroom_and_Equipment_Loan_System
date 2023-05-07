@@ -15,15 +15,20 @@ $password_hash = password_hash($password,PASSWORD_DEFAULT);
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     $sql = "SELECT * FROM 使用者資料表 WHERE 學號 = '$UID' ";
     $result = mysqli_query($conn,$sql);
+    $row = mysqli_fetch_assoc($result); // mysqli_fetch_assoc($result)執行一次，就會讀取資料指標指向的下一筆資料。所以在第一次讀取完，下一次再讀取時，指標指向的是空的位置
 
     // 查詢返回一行，而且該行的密碼欄位和輸入的密碼一致
-    if(mysqli_num_rows($result)==1 && $password==mysqli_fetch_assoc($result)["密碼"]){
+    if(mysqli_num_rows($result)==1 && $password==$row["密碼"]){
         // 建立一個新的session，將使用者的ID和帳號名稱存儲在session變數中
         session_start();
         $_SESSION["loggedin"] = true;
-        // 之後可以用到的變數
-        // $_SESSION["id"] = mysqli_fetch_assoc($result)["id"];
-        $_SESSION["UID"] = mysqli_fetch_assoc($result)["UID"];
+        // 之後可以用到的變數，存在session內
+        $_SESSION["UID"] = $UID;
+        $_SESSION["name"] = $row["姓名"];
+        $_SESSION["lab"] = $row["實驗室名稱"];
+        $_SESSION["email"] = $row["Email"];
+        $_SESSION["phone"] = $row["電話"];
+
         header("location:welcome.php");
     }
     else{
