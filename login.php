@@ -32,7 +32,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         header("location:welcome.php");
     }
     else{
-            function_alert("帳號或密碼錯誤"); // 寫在register.php
+        function_alert("帳號或密碼錯誤"); // 寫在register.php
     }
 }
 else{
