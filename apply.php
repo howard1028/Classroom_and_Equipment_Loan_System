@@ -29,7 +29,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
       $apply_sql = "INSERT INTO `申請資料表` ( `教室編號`, `學號`, `借用人`,`借用日期`) 
       VALUES ( '$classroom_id', '$student_id', '$borrower', '$borrow_date')";
       $apply_result = mysqli_query($conn, $apply_sql);
-
+      // 插入申請表編號
       $id_sql = "SELECT * FROM `申請資料表` WHERE 學號 like '$student_id' AND 借用人 like '$borrower' AND 借用日期 like '$borrow_date'";
       $id_result = mysqli_query($conn, $id_sql);
       $id = mysqli_fetch_assoc($id_result)["申請表編號"];
@@ -51,7 +51,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         }
       }
 
-      if ($apply_result && $time_result) {
+      if ($apply_result) {
         // 如果插入成功，則顯示成功信息
         function_alert("申請成功，請等待系辦審核。");
       } 
@@ -89,6 +89,7 @@ mysqli_close($conn);
     <head>
         <meta charset="utf-8">
         <title>教室及設備申請表</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body>
         <h1>教室及設備申請表</h1>
@@ -104,10 +105,10 @@ mysqli_close($conn);
             <!-- 有空改動態 -->
             <select name="classroom_id" id="classroom_id" required>
               <option value>請選擇教室</option>
-              <option value="5008">EC5008</option>
-              <option value="5012">EC5012</option>
-              <option value="9006">EC9006</option>
-              <option value="9054">EC9054</option>
+              <option value="1">EC5008</option>
+              <option value="2">EC5009</option>
+              <option value="3">EC5010</option>
+              <option value="4">EC9009</option>
             </select> <br>
             
             <!-- 借用日期 -->

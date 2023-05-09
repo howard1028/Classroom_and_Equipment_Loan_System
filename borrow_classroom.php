@@ -5,8 +5,8 @@
 $conn = require_once "config.php";
 
 // 查詢 "教室資料表" 的所有內容
-$sql = "SELECT * FROM `教室資料表`";
-$result = mysqli_query($conn, $sql);
+$result = mysqli_query($conn, "SELECT * FROM `教室資料表`");
+$result2 = mysqli_query($conn, "SELECT * FROM `教室資料表`");
 
 // 如果查詢結果有資料
 if (mysqli_num_rows($result) > 0) {
