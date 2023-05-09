@@ -52,6 +52,8 @@ if (mysqli_num_rows($result) > 0) {
 else {
     echo "無資料!";
 }
+// 上一頁
+echo "<a href='welcome.php'>上一頁</a><br>";
 
 // 關閉資料庫連接
 mysqli_close($conn);

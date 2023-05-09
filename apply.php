@@ -1,73 +1,4 @@
-<!-- HTML -->
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>教室及設備申請表</title>
-       
-    </head>
-    <body>
-        <h1>教室及設備申請表</h1>
-        <form name="ApplyForm" action="apply.php" method="POST">
-            申請表編號:<br>
-            <input type="text" name="form_no"><br>
-            學號:<br>
-            <input type="text" name="student_id"><br>
-            借用人:<br>
-            <input type="text" name="borrower"><br>      
-            教室編號:<br>
-            <input type="text" name="classroom_id"><br>
-            用途:<br>
-            <input type="text" name="purpose"><br>
-            負責系辦:<br>
-            <input type="text" name="department"><br> 
-
-            <!-- 借用日期 -->
-            <label for="borrow_date">借用日期：</label><br>
-            <!-- 年 -->
-            <select name="year">
-              <?php
-                for ($i = date("Y"); $i <= date("Y")+1; $i++) {
-                  echo "<option value=\"$i\">$i</option>";
-                }
-              ?>
-            </select>
-            <!-- 月 -->
-            <select name="month" onchange="updateDays()">
-              <?php
-                for ($i = 1; $i <= 12; $i++) {
-                  echo "<option value=\"$i\">$i</option>";
-                }
-              ?>
-            </select>
-            <!-- 日 -->
-            <select name="day">
-              <?php
-                $numDays = cal_days_in_month(CAL_GREGORIAN, date("n"), date("Y"));
-                for ($i = 1; $i <= $numDays; $i++) {
-                  echo "<option value=\"$i\">$i</option>";
-                }
-              ?>
-            </select>
-            <br>
-
-            <!-- 借用時段 -->
-            <label for="borrow_time">借用時段：</label><br>
-            <select name="borrow_time" id="borrow_time">
-                <option value="8:10-9:00">8:10-9:00</option>
-                <option value="9:10-10:00">9:10-10:00</option>
-                <option value="10:10-11:00">10:10-11:00</option>
-                <!-- 其他選項 -->
-            </select><br>
-
-            <input type="submit" value="送出"/>   
-        </form>
-    </body>
-</html>
-
-
-
-<!-- PHP -->
+<!------------------------------------------------ PHP ------------------------------------------------>
 
 <?php
 // 建立資料庫連接
@@ -75,47 +6,63 @@ $conn = require_once "config.php";
 
 if($_SERVER["REQUEST_METHOD"]=="POST"){
 
-	// 獲取表單提交的數據
-	$form_no = $_POST['form_no'];
-	$classroom_id = $_POST['classroom_id'];
-	$student_id = $_POST['student_id'];
-	$purpose = $_POST['purpose'];
-	$borrower = $_POST['borrower'];
-  $department = $_POST['department'];
-	
-  // 借用日期
-  $year = $_POST['year'];
-  $month = $_POST['month'];
-  $day = $_POST['day'];
-  $borrow_date = date("Y-m-d", strtotime("$year-$month-$day"));
-	// $borrow_date = $_POST['borrow_date'];
 
-	$borrow_time = $_POST['borrow_time'];
+    session_start();
+    $student_id = $_SESSION['UID'];
+    $borrower = $_SESSION['name'];
+    $classroom_id = $_POST['classroom_id'];
+    $borrow_date = $_POST['borrow_date'];
 
-	// 檢查借用時段是否有衝突
-	$book_sql = "SELECT * FROM `借用時段` WHERE `教室編號`='$classroom_id' AND `已借用日期`='$borrow_date' AND `已借用時段`='$borrow_time'";
-	$book_result = mysqli_query($conn, $book_sql);
+    // 借用時段
+    $borrow_time = $_POST['borrow_time'];
+    // 檢查借用時段是否有衝突
+    $book_sql = "SELECT * FROM `借用時段` WHERE `教室編號`='$classroom_id' AND `已借用日期`='$borrow_date' "; // 還要檢查節數
+    $book_result = mysqli_query($conn, $book_sql);
 
-	if (mysqli_num_rows($book_result) > 0) {
-		// 如果借用時間已被預訂，則顯示錯誤信息
-		function_alert("該時間段已被預訂，請選擇其他時段。");
-	} 
-	else {
-		// 如果借用時間未被預訂，則插入一條新的借用申請
-		$insert_sql = "INSERT INTO `申請資料表` (`申請表編號`, `教室編號`, `學號`, `用途`, `借用人`, `借用日期`, `負責系辦`, `借用時段`) 
-		VALUES ('$form_no', '$classroom_id', '$student_id', '$purpose', '$borrower', '$borrow_date', '$department', '$borrow_time')";
-		$insert_result = mysqli_query($conn, $insert_sql);
 
-		if ($insert_result) {
-			// 如果插入成功，則顯示成功信息
-			function_alert("申請成功，請等待系辦審核。");
-		} 
-		else {
-			// 如果插入失敗，則顯示錯誤信息
-      function_alert("申請失敗，請重試。");
-		}
-	}
+    if (mysqli_num_rows($book_result) > 0) {
+      // 如果借用時間已被預訂，則顯示錯誤信息
+      function_alert("該時間段已被預訂，請選擇其他時段。");
+    } 
+    else {
+      // 如果借用時間未被預訂，則插入一條新的借用申請
+      $apply_sql = "INSERT INTO `申請資料表` ( `教室編號`, `學號`, `借用人`,`借用日期`) 
+      VALUES ( '$classroom_id', '$student_id', '$borrower', '$borrow_date')";
+      $apply_result = mysqli_query($conn, $apply_sql);
+
+      $id_sql = "SELECT * FROM `申請資料表` WHERE 學號 like '$student_id' AND 借用人 like '$borrower' AND 借用日期 like '$borrow_date'";
+      $id_result = mysqli_query($conn, $id_sql);
+      $id = mysqli_fetch_assoc($id_result)["申請表編號"];
+
+      // 取出checkbox borrow_time的值
+      if(isset($_POST['borrow_time'])) {
+        foreach($_POST['borrow_time'] as $selected_period) {
+          $sql = "INSERT INTO `借用時段` ( `申請表編號`,`教室編號`,`已借用日期`,`已借用時段`)
+          VALUES ( '$id','$classroom_id','$borrow_date','$selected_period')";
+          $result = mysqli_query($conn, $sql);
+        }
+      }
+      // 取出checkbox borrow_equipment的值
+      if(isset($_POST['borrow_equipment'])) {
+        foreach($_POST['borrow_equipment'] as $selected_equipment) {
+          $sql = "INSERT INTO `借用設備` ( `申請表編號`,`借用設備`) 
+          VALUES ( '$id','$selected_equipment')";
+          $result = mysqli_query($conn, $sql);
+        }
+      }
+
+      if ($apply_result && $time_result) {
+        // 如果插入成功，則顯示成功信息
+        function_alert("申請成功，請等待系辦審核。");
+      } 
+      else {
+        // 如果插入失敗，則顯示錯誤信息
+        function_alert("申請失敗，請重試。");
+      }
+    }
+
 }
+
 
 // 跳出警示框顯示message，關閉警示框後跳轉回apply.php
 function function_alert($message) { 
@@ -129,27 +76,86 @@ function function_alert($message) {
   return false;
 } 
 
+
 // 關閉資料庫連接
 mysqli_close($conn);
 ?>
 
 
 
-<!-- JavaScript -->
+<!------------------------------------------------ HTML ------------------------------------------------>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>教室及設備申請表</title>
+    </head>
+    <body>
+        <h1>教室及設備申請表</h1>
+        <form name="ApplyForm" action="apply.php" method="POST">
+            <!-- 申請表編號:<br>
+            <input type="text" name="form_no"><br> -->
+            學號:<br>
+            <input type="text" name="student_id" value="<?php session_start(); echo $_SESSION["UID"]; ?>" disabled><br>
+            借用人:<br>
+            <input type="text" name="borrower" value="<?php echo $_SESSION["name"]; ?>" disabled><br>   
+    
+            教室編號:<br>
+            <!-- 有空改動態 -->
+            <select name="classroom_id" id="classroom_id" required>
+              <option value>請選擇教室</option>
+              <option value="5008">EC5008</option>
+              <option value="5012">EC5012</option>
+              <option value="9006">EC9006</option>
+              <option value="9054">EC9054</option>
+            </select> <br>
+            
+            <!-- 借用日期 -->
+            借用日期:<br>
+            <input type="date" name="borrow_date" min="<?php echo date('Y-m-d'); ?>"  required><br>
+            
+            <!-- <input type="submit" name="inquiry" value="查詢"/><br> -->
+
+            <!-- 借用時段 -->
+            <label for="borrow_time">借用時段：</label><br>
+              <input type="checkbox" name="borrow_time[]" value="1"> 8:00-8:59<br>
+              <input type="checkbox" name="borrow_time[]" value="2"> 9:00-9:59<br>
+              <input type="checkbox" name="borrow_time[]" value="3"> 10:00-10:59<br>
+            <br>
+
+            <!-- 借用設備 -->
+            <label for="borrow_equipment">借用設備：</label><br>
+              <input type="checkbox" name="borrow_equipment[]" value="麥克風">麥克風<br>
+              <input type="checkbox" name="borrow_equipment[]" value="轉接頭">轉接頭<br>
+              <input type="checkbox" name="borrow_equipment[]" value="滑鼠">滑鼠<br>
+            <br>
+
+            <input type="submit" name="send" value="送出"/>   
+        </form>
+    </body>
+</html>
+
+
+<!------------------------------------------------ JavaScript ------------------------------------------------>
+
 <script>
-  // 根據所選月份的實際天數來生成對應的選項
-  function updateDays() {
-    var year = document.getElementsByName("year")[0].value;
-    var month = document.getElementsByName("month")[0].value;
-    var numDays = new Date(year, month, 0).getDate();
-    var daySelect = document.getElementsByName("day")[0];
-    daySelect.innerHTML = "";
-    for (var i = 1; i <= numDays; i++) {
-      var option = document.createElement("option");
-      option.value = i;
-      option.text = i;
-      daySelect.add(option);
+  // 至少有一個借用時段被勾選，若沒有則阻止表單提交
+  const form = document.querySelector('form');
+  const borrowTimeCheckboxes = form.querySelectorAll('input[name="borrow_time[]"]');
+  const borrowTimeError = document.querySelector('#borrow-time-error');
+
+  form.addEventListener('submit', (event) => {
+    let isBorrowTimeSelected = false;
+    borrowTimeCheckboxes.forEach((checkbox) => {
+      if (checkbox.checked) {
+        isBorrowTimeSelected = true;
+      }
+    });
+
+    if (!isBorrowTimeSelected) {
+      event.preventDefault(); // 阻止表單提交
+      borrowTimeError.style.display = 'inline'; // 顯示錯誤訊息
     }
-  }
-  updateDays();
+  });
+
 </script>
