@@ -7,60 +7,60 @@ $conn = require_once "config.php";
 if($_SERVER["REQUEST_METHOD"]=="POST"){
 
 
-    session_start();
-    $student_id = $_SESSION['UID'];
-    $borrower = $_SESSION['name'];
-    $classroom_id = $_POST['classroom_id'];
-    $borrow_date = $_POST['borrow_date'];
+  session_start();
+  $student_id = $_SESSION['UID'];
+  $borrower = $_SESSION['name'];
+  $classroom_id = $_POST['classroom_id'];
+  $borrow_date = $_POST['borrow_date'];
+  $_SESSION["date"] = $borrow_date;
 
-    // 借用時段
-    $borrow_time = $_POST['borrow_time'];
-    // 檢查借用時段是否有衝突
-    $book_sql = "SELECT * FROM `借用時段` WHERE `教室編號`='$classroom_id' AND `已借用日期`='$borrow_date' "; // 還要檢查節數
-    $book_result = mysqli_query($conn, $book_sql);
+  // 借用時段
+  $borrow_time = $_POST['borrow_time'];
+  // 檢查借用時段是否有衝突
+  $book_sql = "SELECT * FROM `借用時段` WHERE `教室編號`='$classroom_id' AND `已借用日期`='$borrow_date' "; // 還要檢查節數
+  $book_result = mysqli_query($conn, $book_sql);
 
 
-    if (mysqli_num_rows($book_result) > 0) {
-      // 如果借用時間已被預訂，則顯示錯誤信息
-      function_alert("該時間段已被預訂，請選擇其他時段。");
-    } 
-    else {
-      // 如果借用時間未被預訂，則插入一條新的借用申請
-      $apply_sql = "INSERT INTO `申請資料表` ( `教室編號`, `學號`, `借用人`,`借用日期`) 
-      VALUES ( '$classroom_id', '$student_id', '$borrower', '$borrow_date')";
-      $apply_result = mysqli_query($conn, $apply_sql);
-      // 插入申請表編號
-      $id_sql = "SELECT * FROM `申請資料表` WHERE 學號 like '$student_id' AND 借用人 like '$borrower' AND 借用日期 like '$borrow_date'";
-      $id_result = mysqli_query($conn, $id_sql);
-      $id = mysqli_fetch_assoc($id_result)["申請表編號"];
+  if (mysqli_num_rows($book_result) > 0) {
+    // 如果借用時間已被預訂，則顯示錯誤信息
+    function_alert("該時間段已被預訂，請選擇其他時段。");
+  } 
+  else {
+    // 如果借用時間未被預訂，則插入一條新的借用申請
+    $apply_sql = "INSERT INTO `申請資料表` ( `教室編號`, `學號`, `借用人`,`借用日期`) 
+    VALUES ( '$classroom_id', '$student_id', '$borrower', '$borrow_date')";
+    $apply_result = mysqli_query($conn, $apply_sql);
+    // 插入申請表編號
+    $id_sql = "SELECT * FROM `申請資料表` WHERE 學號 like '$student_id' AND 借用人 like '$borrower' AND 借用日期 like '$borrow_date'";
+    $id_result = mysqli_query($conn, $id_sql);
+    $id = mysqli_fetch_assoc($id_result)["申請表編號"];
 
-      // 取出checkbox borrow_time的值
-      if(isset($_POST['borrow_time'])) {
-        foreach($_POST['borrow_time'] as $selected_period) {
-          $sql = "INSERT INTO `借用時段` ( `申請表編號`,`教室編號`,`已借用日期`,`已借用時段`)
-          VALUES ( '$id','$classroom_id','$borrow_date','$selected_period')";
-          $result = mysqli_query($conn, $sql);
-        }
+    // 取出checkbox borrow_time的值
+    if(isset($_POST['borrow_time'])) {
+      foreach($_POST['borrow_time'] as $selected_period) {
+        $sql = "INSERT INTO `借用時段` ( `申請表編號`,`教室編號`,`已借用日期`,`已借用時段`)
+        VALUES ( '$id','$classroom_id','$borrow_date','$selected_period')";
+        $result = mysqli_query($conn, $sql);
       }
-      // 取出checkbox borrow_equipment的值
-      if(isset($_POST['borrow_equipment'])) {
-        foreach($_POST['borrow_equipment'] as $selected_equipment) {
-          $sql = "INSERT INTO `借用設備` ( `申請表編號`,`借用設備`) 
-          VALUES ( '$id','$selected_equipment')";
-          $result = mysqli_query($conn, $sql);
-        }
-      }
-
-      if ($apply_result) {
-        // 如果插入成功，則顯示成功信息
-        function_alert("申請成功，請等待系辦審核。");
-      } 
-      else {
-        // 如果插入失敗，則顯示錯誤信息
-        function_alert("申請失敗，請重試。");
+    }
+    // 取出checkbox borrow_equipment的值
+    if(isset($_POST['borrow_equipment'])) {
+      foreach($_POST['borrow_equipment'] as $selected_equipment) {
+        $sql = "INSERT INTO `借用設備` ( `申請表編號`,`借用設備`) 
+        VALUES ( '$id','$selected_equipment')";
+        $result = mysqli_query($conn, $sql);
       }
     }
 
+    if ($apply_result) {
+      // 如果插入成功，則顯示成功信息
+      function_alert("申請成功，請等待系辦審核。");
+    } 
+    else {
+      // 如果插入失敗，則顯示錯誤信息
+      function_alert("申請失敗，請重試。");
+    }
+  }
 }
 
 

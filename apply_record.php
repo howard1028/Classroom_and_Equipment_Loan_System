@@ -53,9 +53,10 @@ if (mysqli_num_rows($result) > 0) {
 
         echo "</td><td>";
         
-        echo '<form action="print.php" method="post">';
+        echo '<form action="print.php" method="POST">';
+        echo '<input type="hidden" name="id" value="' . $id . '">';
         echo '<input type="submit" value="列印">';
-        echo '</form>';
+        echo '</form>';        
 
         echo "</td></tr>";
     }
