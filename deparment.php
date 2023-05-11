@@ -6,7 +6,7 @@
         <!-- <link rel="stylesheet" type="text/css" href="welcome.css"> -->
     </head>
     <body>
-        <h1>歡迎頁面</h1>   
+        <h1>系辦</h1>   
         <div class="container">
             <?php
             $conn = require_once "config.php";

@@ -29,7 +29,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $_SESSION["email"] = $row["Email"];
         $_SESSION["phone"] = $row["電話"];
 
-        header("location:welcome.php");
+        if($UID == "0"){
+            header("location:deparment.php");
+        }
+        else{
+            header("location:welcome.php");
+        }
     }
     else{
         function_alert("帳號或密碼錯誤"); // 寫在register.php

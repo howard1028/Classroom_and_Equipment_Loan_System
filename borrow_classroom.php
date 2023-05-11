@@ -16,7 +16,7 @@ if (mysqli_num_rows($result) > 0) {
                 <th>教室名稱</th>
                 <th>教室位置</th>
                 <th>可容納人數</th>
-                <th>借用情況</th>
+                <th>借用時段</th>
             </tr>";
 
     // 輸出表格的每一行
@@ -37,7 +37,7 @@ if (mysqli_num_rows($result) > 0) {
         if (mysqli_num_rows($book_result) > 0) {
             // 輸出預借資料
             while($book_row = mysqli_fetch_assoc($book_result)) {
-                echo $book_row["已借用日期"] . " " . $book_row["已借用時段"] . "<br>";
+                echo $book_row["已借用日期"] . " 第" . $book_row["已借用時段"] . "節"."<br>";
             }
         } 
         else {

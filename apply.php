@@ -27,8 +27,8 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
   } 
   else {
     // 如果借用時間未被預訂，則插入一條新的借用申請
-    $apply_sql = "INSERT INTO `申請資料表` ( `教室編號`, `學號`, `借用人`,`借用日期`) 
-    VALUES ( '$classroom_id', '$student_id', '$borrower', '$borrow_date')";
+    $apply_sql = "INSERT INTO `申請資料表` ( `教室編號`, `學號`, `借用人`,`借用日期`,`審核情況`) 
+    VALUES ( '$classroom_id', '$student_id', '$borrower', '$borrow_date' , '待審核')";
     $apply_result = mysqli_query($conn, $apply_sql);
     // 插入申請表編號
     $id_sql = "SELECT * FROM `申請資料表` WHERE 學號 like '$student_id' AND 借用人 like '$borrower' AND 借用日期 like '$borrow_date'";

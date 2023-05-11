@@ -19,7 +19,6 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_assoc($result);
 
-    // $id = $row["申請表編號"];
     $classroom_id = $row["教室編號"];
     $borrow_date = $row["借用日期"];
 
@@ -30,19 +29,34 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     
     // 借用時段
     $time = "";
-    $book_sql = "SELECT * FROM `借用時段` WHERE `教室編號` LIKE '$classroom_id'";
+    $book_sql = "SELECT * FROM `借用時段` WHERE 申請表編號 = $id; ";
     $book_result = mysqli_query($conn, $book_sql);
+    $first = true;
     while($book_row = mysqli_fetch_assoc($book_result)) {
-        $time = $time ." ". $book_row["已借用時段"];
+        if($first){
+            $time = $time . $book_row["已借用時段"];
+            $first = FALSE;
+        }
+        else{
+            $time = $time ."、". $book_row["已借用時段"];
+        }
     }
 
     // 借用設備
     $equipment = "";
     $equipment_sql = "SELECT * FROM `借用設備`,`申請資料表` WHERE 借用設備.申請表編號 = 申請資料表.申請表編號 AND 申請資料表.申請表編號 = '$id' ";
     $equipment_result = mysqli_query($conn, $equipment_sql);
+    $first = true;
     while($equipment_row = mysqli_fetch_assoc($equipment_result)) {
-        $equipment = $equipment ." ". $equipment_row["借用設備"];
+        // 第一項不加","
+        if($first) {
+            $equipment = $equipment . $equipment_row["借用設備"];
+            $first = false;
+        } else {
+            $equipment = $equipment ."、". $equipment_row["借用設備"];
+        }
     }
+    
 
 
     // 引入 TCPDF 函式庫
