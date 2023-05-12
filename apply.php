@@ -1,5 +1,5 @@
 <!------------------------------------------------ PHP ------------------------------------------------>
-
+申請表
 <?php
 // 建立資料庫連接
 $conn = require_once "config.php";
@@ -119,9 +119,9 @@ mysqli_close($conn);
 
             <!-- 借用時段 -->
             <label for="borrow_time">借用時段：</label><br>
-              <input type="checkbox" name="borrow_time[]" value="1"> 8:00-8:59<br>
-              <input type="checkbox" name="borrow_time[]" value="2"> 9:00-9:59<br>
-              <input type="checkbox" name="borrow_time[]" value="3"> 10:00-10:59<br>
+              <input type="checkbox" name="borrow_time[]" value="1">第一節 8:00-8:59<br>
+              <input type="checkbox" name="borrow_time[]" value="2">第二節 9:00-9:59<br>
+              <input type="checkbox" name="borrow_time[]" value="3">第三節 10:00-10:59<br>
             <br>
 
             <!-- 借用設備 -->

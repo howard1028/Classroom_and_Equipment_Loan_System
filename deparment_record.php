@@ -1,6 +1,7 @@
 <h1>系辦紀錄</h1>
 
 <?php
+// 系辦紀錄
 
 $conn = require_once "config.php";
 session_start();
@@ -23,8 +24,7 @@ if (mysqli_num_rows($result) > 0) {
                 <th>借用時段</th>
                 <th>借用設備</th>
                 <th>歸還情況</th>
-                <th>列印</th>
-                <th>歸還</th>
+                <th>負責人</th>
             </tr>";
 
     // 輸出表格的每一行
@@ -55,11 +55,6 @@ if (mysqli_num_rows($result) > 0) {
             }
         }
         echo $time;
-
-        // 輸出預借資料
-        // while($book_row = mysqli_fetch_assoc($book_result)) {
-        //     echo $book_row["已借用時段"] . ",";
-        // }
         echo "</td><td>";
 
 
@@ -81,26 +76,32 @@ if (mysqli_num_rows($result) > 0) {
         echo $equipment;
         echo "</td>";
 
-        // 審核情況
-        echo "<td>" . $row["歸還情況"] . "</td>";
+        // 歸還情況
+        $today = date("Y-m-d");
+        if($row["歸還情況"] == "尚未歸還"){
+            echo "<td>" . $row["歸還情況"] . "</td>";
+        }
+        else{
+            echo "<td>" . $today ." ". $row["歸還情況"] . "</td>";
+        }
 
         echo "<td>";
+
         // 列印按鈕
-        echo '<form action="print.php" method="POST">';
-        echo '<input type="hidden" name="id" value="' . $id . '">';
-        echo '<input type="submit" value="列印">';
-        echo '</form>';       
+        // echo '<form action="print.php" method="POST">';
+        // echo '<input type="hidden" name="id" value="' . $id . '">';
+        // echo '<input type="submit" value="列印">';
+        // echo '</form>';       
 
         // echo "</td><td>";
 
         // // 審核按鈕
         // echo '<form action="deparment.php" method="POST">';
         // echo '<input type="hidden" name="id" value="' . $id . '">';
-
         // echo '<input type="submit" value="通過">';
         // echo '<input type="submit" value="退回">';
         // echo '</form>';    
-        echo "</td><td>";
+        // echo "</td><td>";
 
         // 歸還按鈕
 
@@ -111,7 +112,7 @@ if (mysqli_num_rows($result) > 0) {
             echo '</form>';            
         }
         else{
-            echo "已成功歸還";
+            echo $_SESSION["lab"] . " " . $_SESSION["name"];
         }
         
 

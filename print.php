@@ -1,4 +1,5 @@
 <?php
+// 列印
 
 // 建立資料庫連接
 $conn = require_once "config.php";

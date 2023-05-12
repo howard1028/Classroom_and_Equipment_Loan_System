@@ -24,7 +24,7 @@ if($link === false){
     die("ERROR: Could not connect. " . mysqli_connect_error());
 }
 else{
-    echo "資料庫連線成功 !";
+    // echo "資料庫連線成功 !";
     return $link;
 }
 

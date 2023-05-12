@@ -11,14 +11,13 @@
             <?php
             $conn = require_once "config.php";
             session_start();
-            echo "<h2>你好 " . $_SESSION["name"] . "</h2>";
-            echo "<a href='change_password.php'>更改密碼</a><br>";
-
-            // echo "<a href='borrow_classroom.php' class='button'>查詢教室借用情況</a><br>";
-            // echo "<a href='apply.php' class='button'>申請教室借用</a><br>";
-            echo "<a href='deparment_record.php'>學生申請紀錄</a><br>";
-            echo "<a href='logout.php'>登出</a><br>";
             
+            echo "<h2>你好 " . $_SESSION["name"] . "</h2>";
+            echo "<a href='deparment_record.php'>學生申請紀錄</a><br>";
+            echo "<a href='borrow_classroom.php' class='button'>查詢教室借用情況</a><br>";
+            echo "<a href='change_password.php'>更改密碼</a><br>";
+            echo "<a href='logout.php'>登出</a><br>";
+
             mysqli_close($conn);
             ?>
         </div>

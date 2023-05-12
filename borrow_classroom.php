@@ -1,9 +1,8 @@
-借教室
+<h1>查詢教室或設備的借用情形</h1>
 
 <?php
 
 $conn = require_once "config.php";
-
 // 查詢 "教室資料表" 的所有內容
 $result = mysqli_query($conn, "SELECT * FROM `教室資料表`");
 
@@ -52,9 +51,16 @@ else {
     echo "無資料!";
 }
 // 上一頁
-echo "<a href='welcome.php'>上一頁</a><br>";
+// echo "<a href='welcome.php'>上一頁</a><br>";
+echo "<button onclick='goBack()'>上一頁</button>";
 
 // 關閉資料庫連接
 mysqli_close($conn);
-
 ?>
+
+
+<script>
+function goBack() {
+  window.history.back();
+}
+</script>
