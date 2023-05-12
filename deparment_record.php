@@ -1,4 +1,4 @@
-<h1>申請紀錄</h1>
+<h1>系辦紀錄</h1>
 
 <?php
 
@@ -7,7 +7,7 @@ session_start();
 
 // 查詢 "教室資料表" 的所有內容
 $uid = $_SESSION['UID'] ;
-$sql = "SELECT * FROM `申請資料表` WHERE 學號 LIKE '$uid' ;";
+$sql = "SELECT * FROM `申請資料表`;";
 $result = mysqli_query($conn, $sql);
 
 // 如果查詢結果有資料
@@ -24,6 +24,7 @@ if (mysqli_num_rows($result) > 0) {
                 <th>借用設備</th>
                 <th>歸還情況</th>
                 <th>列印</th>
+                <th>歸還</th>
             </tr>";
 
     // 輸出表格的每一行
@@ -80,7 +81,7 @@ if (mysqli_num_rows($result) > 0) {
         echo $equipment;
         echo "</td>";
 
-        // 歸還情況
+        // 審核情況
         echo "<td>" . $row["歸還情況"] . "</td>";
 
         echo "<td>";
@@ -88,7 +89,31 @@ if (mysqli_num_rows($result) > 0) {
         echo '<form action="print.php" method="POST">';
         echo '<input type="hidden" name="id" value="' . $id . '">';
         echo '<input type="submit" value="列印">';
-        echo '</form>';   
+        echo '</form>';       
+
+        // echo "</td><td>";
+
+        // // 審核按鈕
+        // echo '<form action="deparment.php" method="POST">';
+        // echo '<input type="hidden" name="id" value="' . $id . '">';
+
+        // echo '<input type="submit" value="通過">';
+        // echo '<input type="submit" value="退回">';
+        // echo '</form>';    
+        echo "</td><td>";
+
+        // 歸還按鈕
+
+        if($row["歸還情況"] == "尚未歸還"){
+            echo '<form action="return.php" method="POST">';
+            echo '<input type="hidden" name="id" value="' . $id . '">';
+            echo '<input type="submit" value="歸還">';
+            echo '</form>';            
+        }
+        else{
+            echo "已成功歸還";
+        }
+        
 
         echo "</td></tr>";
     }
@@ -100,8 +125,9 @@ else {
 }
 
 // 上一頁
-echo "<a href='welcome.php'>上一頁</a>";
+echo "<a href='deparment.php'>上一頁</a>";
 
 // 關閉資料庫連接
 mysqli_close($conn);
 ?>
+

@@ -28,11 +28,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $_SESSION["lab"] = $row["實驗室名稱"];
         $_SESSION["email"] = $row["Email"];
         $_SESSION["phone"] = $row["電話"];
+        $_SESSION["permission"] = $row["權限"];
 
-        if($UID == "0"){
+        if($row["權限"] == "1"){
             header("location:deparment.php");
         }
-        else{
+        else if($row["權限"] == "0"){
             header("location:welcome.php");
         }
     }
