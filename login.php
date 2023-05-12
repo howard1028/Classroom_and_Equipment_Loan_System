@@ -37,6 +37,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         else if($row["權限"] == "0"){
             header("location:welcome.php");
         }
+        else if($row["權限"] == "2"){
+            header("location:admin.php");
+        }
+        else{
+            header("location:banned.php");
+        }
     }
     else{
         function_alert("帳號或密碼錯誤"); // 寫在register.php

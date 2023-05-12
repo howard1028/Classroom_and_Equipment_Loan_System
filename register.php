@@ -23,8 +23,8 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     //檢查帳號是否重複 (sql語法的表格名稱和欄位名稱要用反引號 ` 包覆，變數用 ' )
     $check="SELECT * FROM `使用者資料表` WHERE `學號` = '$UID' ";
     if(mysqli_num_rows(mysqli_query($conn,$check))==0){
-        $sql="INSERT INTO `使用者資料表` (`學號`,`姓名`,`實驗室名稱`,`Email`,`電話`,`密碼`)
-            VALUES('$UID','$name','$lab','$email','$phone','$password')";
+        $sql="INSERT INTO `使用者資料表` (`學號`,`姓名`,`實驗室名稱`,`Email`,`電話`,`密碼`,`權限`)
+            VALUES('$UID','$name','$lab','$email','$phone','$password','0')";
         
         if(mysqli_query($conn, $sql)){
             echo "註冊成功!3秒後將自動跳轉頁面<br>";
