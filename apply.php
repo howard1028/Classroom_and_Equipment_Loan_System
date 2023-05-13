@@ -1,5 +1,5 @@
 <!------------------------------------------------ PHP ------------------------------------------------>
-申請表
+
 <?php
 // 建立資料庫連接
 $conn = require_once "config.php";
@@ -89,7 +89,7 @@ mysqli_close($conn);
     <head>
         <meta charset="utf-8">
         <title>教室及設備申請表</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="apply.css">
     </head>
     <body>
         <h1>教室及設備申請表</h1>
@@ -133,6 +133,7 @@ mysqli_close($conn);
 
             <input type="submit" name="send" value="送出"/>   
         </form>
+        <a href="welcome.php">上一頁</a>
     </body>
 </html>
 

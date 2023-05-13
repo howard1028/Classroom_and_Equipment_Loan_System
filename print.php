@@ -68,10 +68,10 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
     // 設置 PDF 文件屬性
     $pdf->SetCreator(PDF_CREATOR);
-    $pdf->SetAuthor('Your Name');
-    $pdf->SetTitle('');
-    $pdf->SetSubject('Your Subject');
-    $pdf->SetKeywords('Keywords');
+    $pdf->SetAuthor($name);
+    $pdf->SetTitle('申請表' . $id);
+    $pdf->SetSubject('申請表' . $id);
+    $pdf->SetKeywords($UID);
 
     // 設置頁面邊界和頁碼
     $pdf->SetMargins(20, 20, 20);
@@ -83,10 +83,12 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
     // 添加內容
     $pdf->AddPage();
-    $pdf->SetFont('msungstdlight', '', 14, '', false);
-    // (寬度,高度,內容,邊框寬度,跳行,對齊,填充,超連結,拉伸,忽略最小高度,垂直對齊)
 
-    $pdf->Cell(0, 10, '教室及設備申請表', 0, 1, 'C', 0, '', 0, false, 'T', 'C'); 
+    $pdf->SetFont('msungstdlight', '', 28, '', false);
+    // (寬度,高度,內容,邊框寬度,跳行,對齊,填充,超連結,拉伸,忽略最小高度,垂直對齊)
+    $pdf->Cell(0, 20, '教室及設備申請表', 0, 1, 'C');
+    $pdf->SetFont('msungstdlight', '', 14, '', false);
+    
     // 申請資料
     $pdf->Cell(0, 10, '申請人資料', 0, 1, 'C', 0, '', 0, false, 'T', 'C'); 
 
@@ -106,8 +108,10 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     $pdf->Cell(0, 10, '借用節數：'. $time, 1, 1, 'L', 0, '', 0, false, 'T', 'C'); 
     $pdf->Cell(0, 10, '借用設備：' . $equipment, 1, 1, 'L', 0, '', 0, false, 'T', 'C'); 
 
-
+    $pdf->Cell(0, 10, '', 0, 1, 'L', 0, '', 0, false, 'T', 'C'); 
     $pdf->Cell(0, 10, '借用人簽名：', 0, 1, 'L', 0, '', 0, false, 'T', 'C'); 
+
+    $pdf->Cell(0, 10, '', 0, 1, 'L', 0, '', 0, false, 'T', 'C'); 
     $pdf->Cell(0, 10, '系辦人員簽名：', 0, 1, 'L', 0, '', 0, false, 'T', 'C'); 
 
 

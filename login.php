@@ -9,7 +9,7 @@ $UID = $_POST["UID"];
 $password = $_POST["password"];
 
 // 將密碼進行雜湊
-$password_hash = password_hash($password,PASSWORD_DEFAULT);
+// $password_hash = password_hash($password,PASSWORD_DEFAULT);
 
 // 當使用者提交了表單（HTTP方法為POST）時，將會觸發以下事件
 if($_SERVER["REQUEST_METHOD"] == "POST"){

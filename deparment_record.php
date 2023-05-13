@@ -1,134 +1,147 @@
-<h1>系辦紀錄</h1>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>系辦紀錄</title>
+	<link rel="stylesheet" type="text/css" href="apply_record.css">
+</head>
+<body>
+    <?php
+    // 系辦紀錄
 
-<?php
-// 系辦紀錄
+    $conn = require_once "config.php";
+    session_start();
 
-$conn = require_once "config.php";
-session_start();
+    // 查詢 "教室資料表" 的所有內容
+    $uid = $_SESSION['UID'] ;
+    $sql = "SELECT * FROM `申請資料表`;";
+    $result = mysqli_query($conn, $sql);
 
-// 查詢 "教室資料表" 的所有內容
-$uid = $_SESSION['UID'] ;
-$sql = "SELECT * FROM `申請資料表`;";
-$result = mysqli_query($conn, $sql);
+    // 如果查詢結果有資料
+    if (mysqli_num_rows($result) > 0) {
+        // 輸出表格的表頭
+        echo "<table border='1'>
+                <tr>
+                    <th>申請表編號</th>
+                    <th>申請教室編號</th>
+                    <th>學號</th>
+                    <th>借用人</th>
+                    <th>借用日期</th>
+                    <th>借用時段</th>
+                    <th>借用設備</th>
+                    <th>歸還情況</th>
+                    <th>負責人</th>
+                </tr>";
 
-// 如果查詢結果有資料
-if (mysqli_num_rows($result) > 0) {
-    // 輸出表格的表頭
-    echo "<table border='1'>
-            <tr>
-                <th>申請表編號</th>
-                <th>申請教室編號</th>
-                <th>學號</th>
-                <th>借用人</th>
-                <th>借用日期</th>
-                <th>借用時段</th>
-                <th>借用設備</th>
-                <th>歸還情況</th>
-                <th>負責人</th>
-            </tr>";
+        // 輸出表格的每一行
+        while($row = mysqli_fetch_assoc($result)) {
+            echo "<tr>
+                    <td>" . $row["申請表編號"] . "</td>
+                    <td>" . $row["教室編號"] . "</td>
+                    <td>" . $row["學號"] . "</td>
+                    <td>" . $row["借用人"] . "</td>
+                    <td>" . $row["借用日期"] . "</td>
+                    <td>"; // 借用情況欄位
 
-    // 輸出表格的每一行
-    while($row = mysqli_fetch_assoc($result)) {
-        echo "<tr>
-                <td>" . $row["申請表編號"] . "</td>
-                <td>" . $row["教室編號"] . "</td>
-                <td>" . $row["學號"] . "</td>
-                <td>" . $row["借用人"] . "</td>
-                <td>" . $row["借用日期"] . "</td>
-                <td>"; // 借用情況欄位
+            // 借用時段
+            $id = $row["申請表編號"];
+            $book_sql = "SELECT * FROM `借用時段` WHERE `申請表編號`='$id' ";
+            $book_result = mysqli_query($conn, $book_sql);
+            
+            // 借用時段
+            $first = true;
+            $time = "";
+            while($book_row = mysqli_fetch_assoc($book_result)) {
+                if($first){
+                    $time = $time . $book_row["已借用時段"];
+                    $first = FALSE;
+                }
+                else{
+                    $time = $time .",". $book_row["已借用時段"];
+                }
+            }
+            echo $time;
+            echo "</td><td>";
 
-        // 借用時段
-        $id = $row["申請表編號"];
-        $book_sql = "SELECT * FROM `借用時段` WHERE `申請表編號`='$id' ";
-        $book_result = mysqli_query($conn, $book_sql);
-        
-        // 借用時段
-        $first = true;
-        $time = "";
-        while($book_row = mysqli_fetch_assoc($book_result)) {
-            if($first){
-                $time = $time . $book_row["已借用時段"];
-                $first = FALSE;
+
+            // 借用設備
+            $id = $row["申請表編號"];
+            $equipment = "";
+            $equipment_sql = "SELECT * FROM `借用設備`,`申請資料表` WHERE 借用設備.申請表編號 = 申請資料表.申請表編號 AND 申請資料表.申請表編號 = '$id' ";
+            $equipment_result = mysqli_query($conn, $equipment_sql);
+            $first = true;
+            while($equipment_row = mysqli_fetch_assoc($equipment_result)) {
+                // 第一項不加","
+                if($first) {
+                    $equipment = $equipment . $equipment_row["借用設備"];
+                    $first = false;
+                } else {
+                    $equipment = $equipment ."、". $equipment_row["借用設備"];
+                }
+            }
+            echo $equipment;
+            echo "</td>";
+
+            // 歸還情況
+            $today = date("Y-m-d");
+            if($row["歸還情況"] == "尚未歸還"){
+                echo "<td>" . $row["歸還情況"] . "</td>";
             }
             else{
-                $time = $time .",". $book_row["已借用時段"];
+                echo "<td>" . $today ." ". $row["歸還情況"] . "</td>";
             }
-        }
-        echo $time;
-        echo "</td><td>";
 
+            echo "<td>";
 
-        // 借用設備
-        $id = $row["申請表編號"];
-        $equipment = "";
-        $equipment_sql = "SELECT * FROM `借用設備`,`申請資料表` WHERE 借用設備.申請表編號 = 申請資料表.申請表編號 AND 申請資料表.申請表編號 = '$id' ";
-        $equipment_result = mysqli_query($conn, $equipment_sql);
-        $first = true;
-        while($equipment_row = mysqli_fetch_assoc($equipment_result)) {
-            // 第一項不加","
-            if($first) {
-                $equipment = $equipment . $equipment_row["借用設備"];
-                $first = false;
-            } else {
-                $equipment = $equipment ."、". $equipment_row["借用設備"];
+            // 列印按鈕
+            // echo '<form action="print.php" method="POST">';
+            // echo '<input type="hidden" name="id" value="' . $id . '">';
+            // echo '<input type="submit" value="列印">';
+            // echo '</form>';       
+
+            // echo "</td><td>";
+
+            // // 審核按鈕
+            // echo '<form action="deparment.php" method="POST">';
+            // echo '<input type="hidden" name="id" value="' . $id . '">';
+            // echo '<input type="submit" value="通過">';
+            // echo '<input type="submit" value="退回">';
+            // echo '</form>';    
+            // echo "</td><td>";
+
+            // 歸還按鈕
+
+            if($row["歸還情況"] == "尚未歸還"){
+                echo '<form action="return.php" method="POST">';
+                echo '<input type="hidden" name="id" value="' . $id . '">';
+                echo '<input type="submit" value="歸還">';
+                echo '</form>';            
             }
+            else{
+                echo $_SESSION["lab"] . " " . $_SESSION["name"];
+            }
+            
+
+            echo "</td></tr>";
         }
-        echo $equipment;
-        echo "</td>";
-
-        // 歸還情況
-        $today = date("Y-m-d");
-        if($row["歸還情況"] == "尚未歸還"){
-            echo "<td>" . $row["歸還情況"] . "</td>";
-        }
-        else{
-            echo "<td>" . $today ." ". $row["歸還情況"] . "</td>";
-        }
-
-        echo "<td>";
-
-        // 列印按鈕
-        // echo '<form action="print.php" method="POST">';
-        // echo '<input type="hidden" name="id" value="' . $id . '">';
-        // echo '<input type="submit" value="列印">';
-        // echo '</form>';       
-
-        // echo "</td><td>";
-
-        // // 審核按鈕
-        // echo '<form action="deparment.php" method="POST">';
-        // echo '<input type="hidden" name="id" value="' . $id . '">';
-        // echo '<input type="submit" value="通過">';
-        // echo '<input type="submit" value="退回">';
-        // echo '</form>';    
-        // echo "</td><td>";
-
-        // 歸還按鈕
-
-        if($row["歸還情況"] == "尚未歸還"){
-            echo '<form action="return.php" method="POST">';
-            echo '<input type="hidden" name="id" value="' . $id . '">';
-            echo '<input type="submit" value="歸還">';
-            echo '</form>';            
-        }
-        else{
-            echo $_SESSION["lab"] . " " . $_SESSION["name"];
-        }
-        
-
-        echo "</td></tr>";
+        // 輸出表格的表尾
+        echo "</table>";
+    } 
+    else {
+        echo "<br>"."無申請紀錄!"."<br>";
     }
-    // 輸出表格的表尾
-    echo "</table>";
-} 
-else {
-    echo "<br>"."無申請紀錄!"."<br>";
-}
 
-// 上一頁
-echo "<a href='deparment.php'>上一頁</a>";
+    // 上一頁
+    echo "<a href='deparment.php'>上一頁</a>";
 
-// 關閉資料庫連接
-mysqli_close($conn);
-?>
+    // 關閉資料庫連接
+    mysqli_close($conn);
+    ?>
+
+</body>
+</html>
+
+
+
+
 

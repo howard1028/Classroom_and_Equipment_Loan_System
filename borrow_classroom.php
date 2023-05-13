@@ -1,5 +1,19 @@
-<h1>查詢教室或設備的借用情形</h1>
+<!-- HTML -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>查詢教室或設備的借用情形</title>
+    <link rel="stylesheet" type="text/css" href="borrow_classroom.css">
+</head>
+<body>
+    <!-- 網頁內容 -->
+</body>
+</html>
 
+
+
+<!-- PHP -->
 <?php
 
 $conn = require_once "config.php";
@@ -58,6 +72,9 @@ echo "<button onclick='goBack()'>上一頁</button>";
 mysqli_close($conn);
 ?>
 
+
+
+<!-- JS -->
 
 <script>
 function goBack() {
