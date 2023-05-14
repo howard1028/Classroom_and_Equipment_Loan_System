@@ -1,12 +1,13 @@
-歸還
+<!-- 歸還 -->
 <?php
 
 // 建立連線
 $conn = require_once "config.php";
 
 // 將申請表編號為$id的"歸還情況"欄位的值改成"已歸還"
+$today = date("Y-m-d");
 $id = $_POST['id'];
-$sql = "UPDATE 申請資料表 SET 歸還情況 = '已歸還' WHERE 申請表編號 = '$id'";
+$sql = "UPDATE 申請資料表 SET 歸還情況 = '$today 已歸還' WHERE 申請表編號 = '$id'";
 
 if (mysqli_query($conn, $sql)) {
   function_alert("歸還成功");

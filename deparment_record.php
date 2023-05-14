@@ -83,13 +83,7 @@
             echo "</td>";
 
             // 歸還情況
-            $today = date("Y-m-d");
-            if($row["歸還情況"] == "尚未歸還"){
-                echo "<td>" . $row["歸還情況"] . "</td>";
-            }
-            else{
-                echo "<td>" . $today ." ". $row["歸還情況"] . "</td>";
-            }
+            echo "<td>" . $row["歸還情況"] . "</td>";
 
             echo "<td>";
 

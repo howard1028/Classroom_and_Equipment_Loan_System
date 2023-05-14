@@ -44,6 +44,7 @@ function function_alert($message) {
             echo "<a href='deparment_record.php' class='button'>學生申請紀錄</a><br>";
             echo "<a href='borrow_classroom.php' class='button'>查詢教室借用情況</a><br>";
             echo "<a href='change_password.php' class='button'>更改密碼</a><br>";
+            echo "<a href='send_email.php' class='button'>測試寄信</a><br>";
             echo "<a href='logout.php' class='button'>登出</a><br>";
 
             mysqli_close($conn);
