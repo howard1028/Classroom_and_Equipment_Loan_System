@@ -12,18 +12,24 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
   $borrower = $_SESSION['name'];
   $classroom_id = $_POST['classroom_id'];
   $borrow_date = $_POST['borrow_date'];
+  // $borrow_time = $_POST['borrow_time'];
   $_SESSION["date"] = $borrow_date;
 
   // 借用時段
   $borrow_time = $_POST['borrow_time'];
   // 檢查借用時段是否有衝突
-  $book_sql = "SELECT * FROM `借用時段` WHERE `教室編號`='$classroom_id' AND `已借用日期`='$borrow_date' "; // 還要檢查節數
+  $book_sql = "SELECT * FROM `借用時段` WHERE `教室編號`='$classroom_id' AND `已借用日期`='$borrow_date'"; // 還要檢查節數
   $book_result = mysqli_query($conn, $book_sql);
 
 
   if (mysqli_num_rows($book_result) > 0) {
     // 如果借用時間已被預訂，則顯示錯誤信息
     function_alert("該時間段已被預訂，請選擇其他時段。");
+    // foreach($_POST['borrow_time'] as $selected_period) {
+    //   $sql = "INSERT INTO `借用時段` ( `申請表編號`,`教室編號`,`已借用日期`,`已借用時段`)
+    //   VALUES ( '$id','$classroom_id','$borrow_date','$selected_period')";
+    //   $result = mysqli_query($conn, $sql);
+    // }
   } 
   else {
     // 如果借用時間未被預訂，則插入一條新的借用申請
