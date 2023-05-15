@@ -28,7 +28,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         
         if(mysqli_query($conn, $sql)){
             echo "註冊成功!3秒後將自動跳轉頁面<br>";
-            echo "<a href='index.php'>未成功跳轉頁面請點擊此</a>";
+            echo "<a href='index.html'>未成功跳轉頁面請點擊此</a>";
             header("refresh:3; url=index.html");
             exit;
         }

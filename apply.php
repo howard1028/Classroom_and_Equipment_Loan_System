@@ -54,7 +54,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
     if ($apply_result) {
       // 如果插入成功，則顯示成功信息
-      function_alert("申請成功，請等待系辦審核。");
+      function_alert("申請成功。");
     } 
     else {
       // 如果插入失敗，則顯示錯誤信息

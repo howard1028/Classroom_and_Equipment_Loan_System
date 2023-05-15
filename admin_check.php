@@ -20,7 +20,7 @@
     }
 
     // 列出所有使用者的資料
-    $sql = "SELECT * FROM `使用者資料表`";
+    $sql = "SELECT * FROM `使用者資料表` WHERE `權限` <> 2;";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
       echo "<table border='1'>";

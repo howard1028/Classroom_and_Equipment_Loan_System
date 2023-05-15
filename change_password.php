@@ -38,16 +38,18 @@
       // $password_hash = password_hash($new_password, PASSWORD_DEFAULT);
       $sql = "UPDATE `使用者資料表` SET `密碼` = '$new_password' WHERE `學號` = '$UID'";
       if (mysqli_query($conn, $sql)) {
-        echo "密碼已更新";
+        function_alert("密碼已更新") ;
         $_SESSION['password'] = $new_password;
       } else {
-        echo "更新失敗: " . mysqli_error($conn);
+        function_alert("更新失敗: " . mysqli_error($conn)) ;
       }
     } else {
-      echo "舊密碼錯誤";
+      function_alert("舊密碼錯誤") ;
     }
   }
 
+
+  
   // 上一頁
   echo "<a href=deparment.php>上一頁</a>";
 
@@ -59,4 +61,19 @@
 </html>
 
 
+
+<?php
+// 跳出警示框顯示message，關閉警示框後跳轉回apply.php
+function function_alert($message) { 
+  // Display the alert box  
+  echo 
+  "<script>
+  alert('$message');
+  window.location.href='change_password.php';
+  </script>"; 
+  
+  return false;
+} 
+
+?>
 

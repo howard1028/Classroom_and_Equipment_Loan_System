@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>註冊頁面</title>
+        <link rel="stylesheet" type="text/css" href="apply.css">
 
         <!--檢查密碼是否符合要求（即長度不少於6個字符，且密碼和確認密碼一致），如果檢查結果為 false，則會顯示一個警告對話框，阻止表單提交-->
         <!-- <script>
@@ -25,7 +26,7 @@
     <body>
         <h1>註冊頁面</h1>
         <!-- 若要檢查密碼則加上  onsubmit="return validateForm()" -->
-        <form name="RegisterForm" action="register.php" method="POST">
+        <form name="RegisterForm" action="register.php" method="POST" onsubmit="return validateForm()">
             帳號(學號):<br>
             <input type="text" name="UID"><br>
             姓名:<br>
@@ -46,3 +47,19 @@
     </body>
 </html>
 
+
+<script>
+    function validateForm() {
+        var x = document.forms["RegisterForm"]["UID"].value;
+        var y = document.forms["RegisterForm"]["name"].value;
+        var z = document.forms["RegisterForm"]["lab"].value;
+        var w = document.forms["RegisterForm"]["email"].value;
+        var v = document.forms["RegisterForm"]["phone"].value;
+        var u = document.forms["RegisterForm"]["password"].value;
+
+        if (x == "" || y == "" || z == "" || w == "" || v == "" || u == "") {
+            alert("請填寫所有必填欄位");
+            return false;
+        }
+    }
+</script>

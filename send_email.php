@@ -30,6 +30,26 @@
         
         // 判斷是否超過時間
         if ($borrow_date < $today){
+
+            echo "<script>
+                // 初始化 EmailJS SDK，使用已建立的服務(service)的 ID
+                emailjs.init('Bgvw5npIQBXLchDZ-');
+
+                // 給系辦
+                emailjs.send('service_z6r7xk4','template_np0vkba', {
+                    subject: '教室借用超時通知',
+                    to_email: '{$_SESSION['email']}',
+                    message: '借用人學號：$borrower_id\n借用人姓名：$borrower_name\n借用時間：$borrow_date\n\n已超過歸還期限，請盡快處理。'
+                })
+                .then(function(response) {
+                    console.log('郵件已發送：', response);
+                }, 
+                function(error) {
+                    console.error('發生錯誤：', error);
+                });
+                
+            </script>";
+
             echo "<script>
                 // 初始化 EmailJS SDK，使用已建立的服務(service)的 ID
                 emailjs.init('Bgvw5npIQBXLchDZ-');
@@ -52,24 +72,7 @@
 
 
 
-            echo "<script>
-                // 初始化 EmailJS SDK，使用已建立的服務(service)的 ID
-                emailjs.init('Bgvw5npIQBXLchDZ-');
 
-                // 給系辦
-                emailjs.send('service_z6r7xk4','template_np0vkba', {
-                    subject: '教室借用超時通知',
-                    to_email: '{$_SESSION['email']}',
-                    message: '借用人學號：$borrower_id\n借用人姓名：$borrower_name\n借用時間：$borrow_date\n\n已超過歸還期限，請盡快處理。'
-                })
-                .then(function(response) {
-                    console.log('郵件已發送：', response);
-                }, 
-                function(error) {
-                    console.error('發生錯誤：', error);
-                });
-                
-            </script>";
         }
     }
 
